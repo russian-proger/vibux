@@ -1,4 +1,5 @@
 import os
+import flask
 from flask import redirect, url_for
 from flask import render_template
 from flask import send_from_directory
@@ -8,8 +9,10 @@ from . import login
 
 @app.route('/')
 def index():
-    return redirect(url_for('login_get'))
+    if 'nickname' not in flask.session:
+        return flask.redirect(flask.url_for('login_get'))
+    return flask.render_template('client.html', nickname=flask.session['nickname'])
 
 @app.route('/static/<string:path>')
 def send_static(path):
-    return send_from_directory('static', path)
+    return flask.send_from_directory('static', path)
