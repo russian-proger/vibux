@@ -37,7 +37,6 @@ def login_post():
 
 @app.get('/signup')
 def signup_get():
-    
     return flk.render_template('signup.html')
 
 @app.post('/signup')
