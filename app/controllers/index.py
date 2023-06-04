@@ -12,7 +12,3 @@ def index():
     if 'nickname' not in flask.session:
         return flask.redirect(flask.url_for('login_get'))
     return flask.render_template('client.html', nickname=flask.session['nickname'])
-
-@app.route('/static/<string:path>')
-def send_static(path):
-    return flask.send_from_directory('static', path)
