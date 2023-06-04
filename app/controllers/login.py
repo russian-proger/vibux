@@ -47,17 +47,17 @@ def signup_post():
     try:
         if form['password'] != form['repeat_password']:
             raise Exception("Пароли не совпадают")
-        
+
         user = User(form['login'], form['password'])
         other = session.scalars(sql.select(User).where(User.nickname == user.nickname)).one_or_none()
-        
+
         if (other != None):
             raise Exception("Пользователь с таким логином уже существует")
 
     except Exception as exc:
         session.close()
         return flk.render_template('signup.html', error=exc.args[0])
-    
+
     session.add(user)
     session.commit()
     session.close()

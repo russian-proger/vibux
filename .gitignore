@@ -1,2 +1,3 @@
 .venv
+.yarn
 __pycache__
