@@ -6,7 +6,7 @@ module.exports = {
         client: './client/index.jsx',
     },
     output: {
-        path: path.resolve(__dirname, './app/static/dest'),
+        path: path.resolve(__dirname, './server/static/dest'),
         filename: '[name].bundle.js'
     },
     module: {

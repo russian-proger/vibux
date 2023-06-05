@@ -6,3 +6,4 @@ app = Flask(__name__)
 socketio = SocketIO(app)
 
 from .controllers import *
+from .isocket import *
