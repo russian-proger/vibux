@@ -1,3 +1,4 @@
+import hashlib
 import sqlalchemy as sql
 import sqlalchemy.orm as orm
 import flask as flk
@@ -19,7 +20,8 @@ def login_post():
     form = flk.request.form
 
     try:
-        user = User(form['login'], form['password'])
+        hsh = hashlib.sha512(form['password'].encode()).hexdigest()
+        user = User(form['login'], hsh)
         other = session.query(User).where(User.nickname == user.nickname).one_or_none()
         if other == None:
             raise Exception('Такого пользователя не существует')
@@ -48,7 +50,10 @@ def signup_post():
         if form['password'] != form['repeat_password']:
             raise Exception("Пароли не совпадают")
 
-        user = User(form['login'], form['password'])
+        print(123)
+        hsh = hashlib.sha512(form['password'].encode()).hexdigest()
+        print(hsh)
+        user = User(form['login'], hsh)
         other = session.scalars(sql.select(User).where(User.nickname == user.nickname)).one_or_none()
 
         if (other != None):

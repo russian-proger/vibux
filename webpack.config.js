@@ -12,7 +12,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.jsx$/,
+                test: /\.jsx?$/,
                 exclude: /(.yarn|node_modules)/,
                 loader: 'babel-loader',
                 options: {

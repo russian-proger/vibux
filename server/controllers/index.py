@@ -3,9 +3,9 @@ import flask
 from flask import redirect, url_for
 from flask import render_template
 from flask import send_from_directory
-from .. import app
 
-from . import login
+
+from .. import app
 
 @app.route('/')
 def index():
