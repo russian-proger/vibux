@@ -11,12 +11,12 @@
 
 Установка зависимостей:
 ```
-pip install -r app/requirements.txt
+pip install -r requirements.txt
 ```
 
 Запуск сервера:
 ```
-./scripts/start-server.sh
+python3 run.py
 ```
 
 ## Требования к ПО

@@ -13,10 +13,10 @@ module.exports = {
         rules: [
             {
                 test: /\.jsx?$/,
-                exclude: /(.yarn|node_modules)/,
+                exclude: /(node_modules)/,
                 loader: 'babel-loader',
                 options: {
-                    cacheDirectory: true,
+                    cacheDirectory: false,
                 },
             },
             {
