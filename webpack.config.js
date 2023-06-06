@@ -2,6 +2,7 @@ const path = require('path');
 
 module.exports = {
     mode: 'development',
+    devtool: 'eval',
     entry: {
         client: './client/index.jsx',
     },

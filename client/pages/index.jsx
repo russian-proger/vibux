@@ -12,7 +12,7 @@ import {
     TextField
 } from '@mui/material';
 
-import * as ConferenceAPI from '../api/conference';
+import * as API from '../api';
 
 export default function Index(props) {
     const navigate = useNavigate();
@@ -28,7 +28,7 @@ export default function Index(props) {
     const onConnect = async () => {
         const conf_id = state.conf_id;
 
-        if (await ConferenceAPI.exists(conf_id)) {
+        if (await API.Conference.exists(conf_id)) {
             navigate(`/conference/${conf_id}`);
         }
         else {
@@ -37,8 +37,8 @@ export default function Index(props) {
     }
 
     const onCreate = async () => {
-        const conf_id = await ConferenceAPI.create();
-        navigate(`/conference/${conf_id}`);
+        const {conference_id} = await API.Conference.create();
+        navigate(`/conference/${conference_id}`);
     }
 
     return (

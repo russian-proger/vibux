@@ -50,9 +50,7 @@ def signup_post():
         if form['password'] != form['repeat_password']:
             raise Exception("Пароли не совпадают")
 
-        print(123)
         hsh = hashlib.sha512(form['password'].encode()).hexdigest()
-        print(hsh)
         user = User(form['login'], hsh)
         other = session.scalars(sql.select(User).where(User.nickname == user.nickname)).one_or_none()
 

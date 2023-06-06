@@ -14,7 +14,6 @@ idna==3.4
 itsdangerous==2.1.2
 Jinja2==3.1.2
 MarkupSafe==2.1.2
-pipreqs==0.4.13
 psycopg2-binary==2.9.6
 python-engineio==4.4.1
 python-socketio==5.8.0

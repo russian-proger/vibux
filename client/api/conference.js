@@ -1,10 +1,14 @@
+import * as API from '.';
+
 /**
  * Check if conference exists
  * @param {number} conference_id 
  * @todo
  */
 export async function exists(conference_id) {
-    return false;
+    let result = await API.query(`conference/exists/${conference_id}`, API.METHOD.GET);
+    console.log(result);
+    return result.answer;
 }
 
 /**
@@ -12,5 +16,5 @@ export async function exists(conference_id) {
  * @returns {string} conference ID
  */
 export async function create() {
-    return 1234;
+    return await API.query(`conference/create`);
 }
