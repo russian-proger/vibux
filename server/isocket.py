@@ -5,7 +5,7 @@ from flask_socketio import emit, join_room, leave_room, send, disconnect, rooms
 from . import socketio
 
 # nickname -> disconnect function
-disconnecter: dict[str, function] = dict()
+disconnecter = dict()
 
 # nickname -> single room UUID
 uuid_sockets: dict[str, str] = dict()
@@ -22,7 +22,7 @@ def connect():
     nickname = flask.session['nickname']
     
     if nickname in uuid_sockets:
-
+        pass
     # uuid_sockets[nickname] = flask.session['uuid']
 
 @socketio.on('disconnect')
