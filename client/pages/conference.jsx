@@ -11,11 +11,13 @@ export default function Conference(props) {
   /** @type {React.MutableRefObject<HTMLAudioElement>} */
   const audioRef = React.useRef(null);
 
-  const [state, useState] = React.useState({
-    socket: new Socket(id),
-  });
+  const socket = React.useMemo(() => new Socket(id), []);
 
-  React.useLayoutEffect(() => {}, []);
+  React.useLayoutEffect(() => {
+    return () => {
+      socket.close();
+    }
+  }, []);
 
   return <audio ref={audioRef} />;
 }

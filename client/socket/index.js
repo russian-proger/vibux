@@ -10,6 +10,8 @@ const options = {
 };
 
 function Socket(conference_id) {
+  this.ondisconnect = () => {}
+
   this.socket = io(options);
 
   this.socket.on("connect", (...args) => {
@@ -17,6 +19,19 @@ function Socket(conference_id) {
       room: `conference:${conference_id}`,
     });
   });
+
+  this.socket.on("disconnect", this.ondisconnect);
+  this.socket.on(Actions.ADD_PEER, ({sid, nickname}) => {
+    console.log(Actions.ADD_PEER, sid, nickname);
+  })
+
+  this.socket.on(Actions.REMOVE_PEER, ({sid, nickname}) => {
+    console.log(Actions.REMOVE_PEER, sid, nickname);
+  })
+
+  this.close = () => {
+    this.socket.close();
+  }
 }
 
 export { Actions, Socket };
