@@ -2,22 +2,21 @@ import React from "react";
 
 import { useParams } from "react-router-dom";
 
-import { Socket } from "../socket";
+import { WebRTCManager } from "../socket";
 
 export default function Conference(props) {
   const params = useParams();
   const id = params.id;
 
-  /** @type {React.MutableRefObject<HTMLAudioElement>} */
-  const audioRef = React.useRef(null);
-
-  const socket = React.useMemo(() => new Socket(id), []);
+  const manager = React.useMemo(() => new WebRTCManager(id), []);
 
   React.useLayoutEffect(() => {
+    
+
     return () => {
-      socket.close();
+      manager.destroy();
     }
   }, []);
 
-  return <audio ref={audioRef} />;
+  return <></>;
 }

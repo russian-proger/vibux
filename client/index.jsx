@@ -8,6 +8,8 @@ import {
 import Index from './pages/index.jsx';
 import Conference from './pages/conference.jsx';
 
+import './legacy.js';
+
 const router = createBrowserRouter([
     {
         path: '/conference/:id',

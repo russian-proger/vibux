@@ -59,3 +59,24 @@ def on_join(sid, nickname, data):
 
     # join this socket to conference room
     join_room(room, sid)
+
+
+
+@socketio.on('relay-sdp')
+@auth
+def relay_sdp(sid, nickname, data):
+    destination = data['destination']
+    sessionDescription = data['sessionDescription']
+
+    # send sdp packet
+    emit('relay-sdp', {'sid': sid, 'nickname': nickname, 'sessionDescription': sessionDescription}, to=destination)
+
+
+@socketio.on('relay-ice')
+@auth
+def relay_ice(sid, nickname, data):
+    destination = data['destination']
+    candidate = data['candidate']
+
+    # send ice packet
+    emit('relay-ice', {'sid': sid, 'nickname': nickname, 'candidate': candidate}, to=destination)
