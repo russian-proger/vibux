@@ -22,7 +22,7 @@ function Peer(sid, nick) {
     iceServers: [
       {urls: 'stun:stun.stunprotocol.org:3478'},
       {urls: 'stun:stun.l.google.com:19302'},
-      {urls: 'turn:turn.vibux.ru:3478'}
+      {urls: 'turn:turn.vibux.ru:3478', username: 'user', credential: 'pwd'}
     ]
   });
 
