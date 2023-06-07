@@ -31,11 +31,12 @@ def on_connect(sid, nickname):
     if nickname in user_sid:
         prev_sid = user_sid[nickname]
         disconnect(prev_sid)
-        sid_user.pop(prev_sid)
 
     # Update dicts
     user_sid[nickname] = sid
     sid_user[sid] = nickname
+
+    print("Connect user:", nickname)
 
 @socketio.on('disconnect')
 @auth
@@ -45,8 +46,10 @@ def on_disconnect(sid, nickname):
         leave_room(room)
         emit('remove-peer', {'sid': sid, 'nickname': nickname}, to=room)
 
+    sid_room.pop(sid)
     sid_user.pop(sid)
     user_sid.pop(nickname)
+    print("Disconnect user:", nickname)
 
 @socketio.on('join')
 @auth
@@ -59,8 +62,6 @@ def on_join(sid, nickname, data):
 
     # join this socket to conference room
     join_room(room, sid)
-
-
 
 @socketio.on('relay-sdp')
 @auth

@@ -1,5 +1,6 @@
-import React from "react";
-import "../css/conference.css";
+import React from 'react';
+import * as ReactRouter from 'react-router-dom';
+import '../css/conference.css';
 
 import {
   Box,
@@ -23,30 +24,32 @@ import { useParams } from "react-router-dom";
 
 import { WebRTCManager } from "../socket";
 
+import useChat from '../hooks/useChat';
+import useMedia from '../hooks/useMedia';
+import useWebRTC from '../hooks/useWebRTC';
+
 export default function Conference(props) {
   const params = useParams();
   const id = params.id;
 
-  const [canAudio, setCanAudio] = React.useState(false);
-  const [canVideo, setCanVideo] = React.useState(true);
-  const [videoEnabled, setVideoEnabled] = React.useState(false);
+  const navigate = ReactRouter.useNavigate();
+
+  const [streams, updateStream] = useWebRTC(1);
+  const userMedia = useMedia();
+
+  const [messages, appendMessage] = useChat();
+
+  const [audioEnabled, setAudioEnabled] = React.useState(false);
+  const [videoEnabled, setVideoEnabled] = React.useState(true);
   const [visibleChat, setVisibleChat] = React.useState(true);
-  const [messages, setMessages] = React.useState([
-    "ДНС",
-    "31",
-    "Меня магазин зовут",
-    "Сокращенно, мага",
-  ]);
   const [textfield, setTextField] = React.useState("");
 
-  console.log(textfield);
-  const LogOut = () => {
-    //Code
+  const logout = () => {
+    navigate('/');
   };
 
   const onSendMessage = () => {
-    setMessages((prev) => [...prev, textfield]);
-    // setInputRef();
+    appendMessage(textfield);
     setTextField("");
   };
 
@@ -54,25 +57,17 @@ export default function Conference(props) {
     setTextField(ev.target.value);
   };
 
-  // /** @type {React.MutableRefObject<HTMLAudioElement>} */
-  // const audioRef = React.useRef(null);
-
-  // const [state, useState] = React.useState({
-  //   socket: new Socket(id),
-  // });
-
-  // React.useLayoutEffect(() => {}, []);
   return (
     <div className="container">
       <div className="conversation">
         <div className="live">
           <div className="mainVideo">
-            {canVideo && (
+            {videoEnabled && (
               <>
                 <video
                   autoPlay
                   loop
-                  muted={canVideo}
+                  muted={videoEnabled}
                   style={{ width: "100%", height: "100%", zIndex: "122" }}
                 >
                   <source
@@ -80,7 +75,6 @@ export default function Conference(props) {
                     // type="/mp4"
                   />
                 </video>
-                <audio muted={!canAudio} />
               </>
             )}
           </div>
@@ -91,7 +85,7 @@ export default function Conference(props) {
                   <video
                     autoPlay
                     loop
-                    muted={canVideo}
+                    muted={videoEnabled}
                     style={{ width: "100%", height: "100%", zIndex: "122" }}
                     src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
                   />
@@ -109,15 +103,15 @@ export default function Conference(props) {
         </div>
         <div className="properites">
           <div className="left_prop">
-            {canAudio ? (
-              <MicIcon onClick={() => setCanAudio(!canAudio)} />
+            {userMedia.mode.audio ? (
+              <MicIcon onClick={userMedia.toggleAudio} />
             ) : (
-              <MicOffIcon onClick={() => setCanAudio(!canAudio)} />
+              <MicOffIcon onClick={userMedia.toggleAudio} />
             )}
-            {canVideo ? (
-              <VideocamIcon onClick={() => setCanVideo(!canVideo)} />
+            {userMedia.mode.video ? (
+              <VideocamIcon onClick={userMedia.toggleVideo} />
             ) : (
-              <VideocamOffIcon onClick={() => setCanVideo(!canVideo)} />
+              <VideocamOffIcon onClick={userMedia.toggleVideo} />
             )}
             <ChatIcon onClick={() => setVisibleChat(!visibleChat)} />
           </div>
@@ -127,7 +121,7 @@ export default function Conference(props) {
               color="error"
               sx={{ height: "45px" }}
               className="exit_button"
-              onClick={() => LogOut()}
+              onClick={logout}
             >
               Exit
             </Button>

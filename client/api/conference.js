@@ -7,7 +7,6 @@ import * as API from '.';
  */
 export async function exists(conference_id) {
     let result = await API.query(`conference/exists/${conference_id}`, API.METHOD.GET);
-    console.log(result);
     return result.answer;
 }
 
