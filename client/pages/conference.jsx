@@ -21,7 +21,7 @@ import SendIcon from "@mui/icons-material/Send";
 
 import { useParams } from "react-router-dom";
 
-import { Socket } from "../socket";
+import { WebRTCManager } from "../socket";
 
 export default function Conference(props) {
   const params = useParams();

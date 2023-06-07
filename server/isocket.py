@@ -4,41 +4,79 @@ import flask
 from flask_socketio import emit, join_room, leave_room, send, disconnect, rooms
 from . import socketio
 
-# nickname -> disconnect function
-disconnecter = dict()
+# nickname -> SID
+user_sid: dict[str, str] = dict()
 
-# nickname -> single room UUID
-uuid_sockets: dict[str, str] = dict()
+# SID -> nickname
+sid_user: dict[str, str] = dict()
 
-# conference ID -> [nicknames]
-conference_rooms: dict[str, list[str]] = dict()
+# SID -> room ID
+sid_room: dict[str, str] = dict()
+
+def auth(f):
+    def g(*args):
+        sid = flask.request.sid # type: ignore
+        nickname = flask.session['nickname']
+        f(sid, nickname, *args)
+    return g
 
 @socketio.on('connect')
-def connect():
+@auth
+def on_connect(sid, nickname):
+    # If unauthorized
     if 'nickname' not in flask.session:
-        disconnect()
-    
-    flask.session['uuid'] = uuid.uuid4()
-    nickname = flask.session['nickname']
-    
-    if nickname in uuid_sockets:
-        pass
-    # uuid_sockets[nickname] = flask.session['uuid']
+        disconnect(sid)
+
+    # Disconnect old connection
+    if nickname in user_sid:
+        prev_sid = user_sid[nickname]
+        disconnect(prev_sid)
+        sid_user.pop(prev_sid)
+
+    # Update dicts
+    user_sid[nickname] = sid
+    sid_user[sid] = nickname
 
 @socketio.on('disconnect')
-def disconnect():
-    print('Client disconnected')
+@auth
+def on_disconnect(sid, nickname):
+    room = sid_room[sid]
+    if room != None:
+        leave_room(room)
+        emit('remove-peer', {'sid': sid, 'nickname': nickname}, to=room)
+
+    sid_user.pop(sid)
+    user_sid.pop(nickname)
 
 @socketio.on('join')
-def on_join(data):
+@auth
+def on_join(sid, nickname, data):
     room = data['room']
-    join_room(room)
-    # send()
-    # send(username + ' has entered the room.', to=room)
+    sid_room[sid] = room
 
-@socketio.on('leave')
-def on_leave(data):
-    username = data['username']
-    room = data['room']
-    leave_room(room)
-    send(username + ' has left the room.', to=room)
+    # notice others in room about the new socket
+    emit('add-peer', {'sid': sid, 'nickname': nickname}, to=room)
+
+    # join this socket to conference room
+    join_room(room, sid)
+
+
+
+@socketio.on('relay-sdp')
+@auth
+def relay_sdp(sid, nickname, data):
+    destination = data['destination']
+    sessionDescription = data['sessionDescription']
+
+    # send sdp packet
+    emit('relay-sdp', {'sid': sid, 'nickname': nickname, 'sessionDescription': sessionDescription}, to=destination)
+
+
+@socketio.on('relay-ice')
+@auth
+def relay_ice(sid, nickname, data):
+    destination = data['destination']
+    candidate = data['candidate']
+
+    # send ice packet
+    emit('relay-ice', {'sid': sid, 'nickname': nickname, 'candidate': candidate}, to=destination)
