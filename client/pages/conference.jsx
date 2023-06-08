@@ -69,10 +69,9 @@ export default function Conference(props) {
   const enableVoiceStream = () => {
     const audioEl = audioStreamEl.current;
     if (audioEl.paused) {
-      // audioEl.currentTime = 0;
+      audioEl.currentTime = 0;
       audioEl.srcObject = voiceStream;
       audioEl.play();
-      // console.log(voiceStream.getAudioTracks());
     }
     setVoiceStreamEnabled(true);
   }
@@ -105,7 +104,7 @@ export default function Conference(props) {
   };
 
   const audioComponent = React.useMemo(() => (
-    <audio key={voiceStream.id} className="hidden" ref={audioStreamEl} />
+    <audio autoPlay key={voiceStream.id} className="hidden" ref={audioStreamEl} />
   ), [voiceStream]);
 
   const streamMonitorsComponent = React.useMemo(() => (

@@ -68,7 +68,7 @@ def on_join(sid, nickname, data):
 def relay_sdp(sid, nickname, data):
     destination = data['destination']
     sessionDescription = data['sessionDescription']
-    print("SDP", sid, destination, data)
+    print("SDP", sid, destination)
 
     # send sdp packet
     emit('relay-sdp', {'sid': sid, 'nickname': nickname, 'sessionDescription': sessionDescription}, to=destination)

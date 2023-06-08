@@ -68,6 +68,23 @@ body {
   background-color: rgb(24, 24, 24);
 }
 
+.peer-stream-block {
+  min-width: 250px;
+  height: 150px;
+  position: relative;
+  border: 1px solid gray;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.peer-stream-block video {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
 .properites {
   width: 100%;
   height: 70px;

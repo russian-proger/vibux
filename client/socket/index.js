@@ -22,7 +22,7 @@ function Peer(sid, nick) {
 
   this.connection = new RTCPeerConnection({
     iceServers: [
-      {urls: 'stun:stun.stunprotocol.org:3478'},
+      // {urls: 'stun:stun.stunprotocol.org:3478'},
       {urls: 'stun:stun.l.google.com:19302'},
       {urls: 'turn:turn.vibux.ru:3478', username: 'user', credential: 'pwd'}
     ]
@@ -37,10 +37,11 @@ function Peer(sid, nick) {
         newStream.removeTrack(track);
       }
     } else if (ev.track.kind == 'video') {
-      for (let track of newStream.getAudioTracks()) {
+      for (let track of newStream.getVideoTracks()) {
         newStream.removeTrack(track);
       }
     }
+
     newStream.addTrack(ev.track);
     this.stream = newStream;
   });
@@ -88,7 +89,7 @@ function WebRTCManager(conference_id) {
   }
 
   this.connectPeer = async ({sid, nickname}) => {
-    console.info(Actions.ADD_PEER, sid, nickname);
+    // console.info(Actions.ADD_PEER, sid, nickname);
 
     const peer = this.createPeer(sid, nickname)
 
@@ -133,7 +134,7 @@ function WebRTCManager(conference_id) {
 
   // Remove peer
   this.socket.on(Actions.REMOVE_PEER, ({sid, nickname}) => {
-    console.info(Actions.REMOVE_PEER, sid, nickname);
+    // console.info(Actions.REMOVE_PEER, sid, nickname);
 
     // Close peer connection
     if (this.peers.has(sid)) {
@@ -151,6 +152,7 @@ function WebRTCManager(conference_id) {
   }) => {
     if (remoteDescription.type == 'offer') {
       const peer = this.createPeer(sid, nickname);
+      peer.stream = new MediaStream();
 
       await peer.connection.setRemoteDescription(remoteDescription);
 
