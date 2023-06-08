@@ -41,6 +41,11 @@ export default function Index(props) {
         navigate(`/conference/${conference_id}`);
     }
 
+    const onLogout = async () => {
+        const {conference_id} = await API.Conference.create();
+        navigate(`/logout`);
+    }
+
     return (
         <Container maxWidth={'sm'}>
             <Box m={2}>
@@ -57,6 +62,12 @@ export default function Index(props) {
             <Box m={2}>
                 <FormControl fullWidth>
                     <Button onClick={onCreate} variant={'outlined'}>Create Conference</Button>
+                </FormControl>
+            </Box>
+
+            <Box m={2}>
+                <FormControl fullWidth>
+                    <Button onClick={onLogout} variant={'outlined'} color='error'>log out</Button>
                 </FormControl>
             </Box>
         </Container>
