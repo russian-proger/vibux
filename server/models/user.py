@@ -10,7 +10,7 @@ class User(Base):
     __tablename__ = "user"
     
     id: Mapped[int] = mapped_column(primary_key=True)
-    nickname: Mapped[str] = mapped_column(String(30))
+    nickname: Mapped[str] = mapped_column(String(32))
     password: Mapped[str] = mapped_column(String(128))
     
     def __init__(self, nickname: str = "", password: str = ""):

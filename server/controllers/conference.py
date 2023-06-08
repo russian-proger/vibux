@@ -1,3 +1,4 @@
+import uuid
 import sqlalchemy as sql
 import sqlalchemy.orm as orm
 import flask as flk
@@ -12,6 +13,7 @@ def conference_create():
 
     with orm.Session(engine) as session:
         conference = Conference()
+        conference.id = str(uuid.uuid4())
 
         session.add(conference)
         session.flush()

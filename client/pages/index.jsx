@@ -50,7 +50,7 @@ export default function Index(props) {
         <Container maxWidth={'sm'}>
             <Box m={2}>
                 <FormControl fullWidth>
-                    <TextField label='ID Conference' onChange={onChange} value={state.conf_id} />
+                    <TextField spellCheck={false} label='ID Conference' onChange={onChange} value={state.conf_id} />
                     <Box m={1}>
                         <Button onClick={onConnect} fullWidth variant='contained'>Connect</Button>
                     </Box>
