@@ -44,6 +44,8 @@ export default function Conference(props) {
   const [peers, updateStream, webrtc] = useWebRTC(id);
   const userMedia = useMedia();
 
+  const renderPeers = [{nick: 'Me', stream: userMedia.stream, sid: "__me__"}, ...peers];
+
   const [selectedPeer, selectPeer] = React.useState(null);
 
   const [messages, appendMessage] = useChat(webrtc.socket);
@@ -110,8 +112,8 @@ export default function Conference(props) {
   const streamMonitorsComponent = React.useMemo(() => (
     <>
      {
-      peers.map(peer => (
-        <PeerMonitor selected={peer == selectedPeer} onSelect={(peer) => selectPeer(peer)} key={peer.sid} peer={peer} />
+      renderPeers.map(peer => (
+        <PeerMonitor key={peer.sid} selected={selectedPeer && peer.sid == selectedPeer.sid} onSelect={(peer) => selectPeer(peer)} peer={peer} />
       ))
      }
     </>
