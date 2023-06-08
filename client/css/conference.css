@@ -205,6 +205,12 @@ body {
   background-color: #23262a;
   transition: width 0.5s ease-out;
 }
+
+@media (max-width: 700px) {
+  .chat-active {
+    display: none;
+  }
+}
 .textArea {
   width: 100%;
   /* min-height: 100%; */
