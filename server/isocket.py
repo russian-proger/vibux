@@ -73,7 +73,6 @@ def relay_sdp(sid, nickname, data):
     # send sdp packet
     emit('relay-sdp', {'sid': sid, 'nickname': nickname, 'sessionDescription': sessionDescription}, to=destination)
 
-
 @socketio.on('relay-ice')
 @auth
 def relay_ice(sid, nickname, data):
@@ -93,3 +92,12 @@ def remove_peer(sid, nickname, data):
 
     # send ice packet
     emit('relay-ice', {'sid': sid, 'nickname': nickname}, to=destination)
+
+@socketio.on('chat-message')
+@auth
+def chat_message(sid, nickname, data):
+    room = sid_room.get(sid, None)
+    if room != None:
+        emit('chat-message', {'sid': sid, 'nickname': nickname, 'message': data}, to=room)
+
+    # send ice packet

@@ -39,12 +39,12 @@ export default function Conference(props) {
 
   const navigate = ReactRouter.useNavigate();
 
-  const [peers, updateStream] = useWebRTC(id);
+  const [peers, updateStream, webrtc] = useWebRTC(id);
   const userMedia = useMedia();
 
   const [mainStream] = React.useState(null);
 
-  const [messages, appendMessage] = useChat();
+  const [messages, appendMessage] = useChat(webrtc.socket);
 
   const [voiceStreamEnabled, setVoiceStreamEnabled] = React.useState(false);
 
@@ -53,8 +53,6 @@ export default function Conference(props) {
   /** @type {React.MutableRefObject<HTMLAudioElement>} */
   const audioStreamEl = React.useRef(null);
 
-  const [audioEnabled, setAudioEnabled] = React.useState(false);
-  const [videoEnabled, setVideoEnabled] = React.useState(true);
   const [visibleChat, setVisibleChat] = React.useState(true);
   const [textfield, setTextField] = React.useState("");
 
@@ -165,12 +163,12 @@ export default function Conference(props) {
       {visibleChat ? (
         <div className="chat-active">
           <div className="textArea">
-            {messages.map((obj, index) => (
+            {messages.map(([nick, message], index) => (
               <div key={index} className="messageBox">
-                <Avatar>D</Avatar>
+                <Avatar>{nick[0]}</Avatar>
                 <div className="message">
-                  <Typography sx={{ fontSize: "18px" }}>Daniel</Typography>
-                  <Typography>{obj}</Typography>
+                  <Typography sx={{ fontSize: "18px" }}>{nick}</Typography>
+                  <Typography>{message}</Typography>
                 </div>
               </div>
             ))}

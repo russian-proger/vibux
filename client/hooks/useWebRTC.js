@@ -22,5 +22,5 @@ export default function useWebRTC(conference_id) {
         webrtc.destroy();
     }, [webrtc]);
 
-    return [peers, updateStream];
+    return [peers, updateStream, webrtc];
 }
