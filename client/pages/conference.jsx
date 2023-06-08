@@ -31,9 +31,9 @@ import { WebRTCManager } from "../socket";
 import useChat from '../hooks/useChat';
 import useMedia from '../hooks/useMedia';
 import useWebRTC from '../hooks/useWebRTC';
-import PeerStream from '../components/PeerStream.jsx';
 import PeerMonitor from '../components/PeerMonitor.jsx';
 import useVoiceStream from '../hooks/useVoiceStream';
+import MainPeerStream from '../components/MainPeerStream.jsx';
 
 export default function Conference(props) {
   const params = useParams();
@@ -44,7 +44,7 @@ export default function Conference(props) {
   const [peers, updateStream, webrtc] = useWebRTC(id);
   const userMedia = useMedia();
 
-  const [mainStream] = React.useState(null);
+  const [selectedPeer, selectPeer] = React.useState(null);
 
   const [messages, appendMessage] = useChat(webrtc.socket);
 
@@ -111,7 +111,7 @@ export default function Conference(props) {
     <>
      {
       peers.map(peer => (
-        <PeerMonitor key={peer.sid} peer={peer} />
+        <PeerMonitor selected={peer == selectedPeer} onSelect={(peer) => selectPeer(peer)} key={peer.sid} peer={peer} />
       ))
      }
     </>
@@ -122,8 +122,8 @@ export default function Conference(props) {
       <div className="conversation">
         <div className="live">
           <div className="mainVideo">
-            {mainStream && (
-              <PeerStream muted={true} stream={mainStream} />
+            {selectedPeer && (
+              <MainPeerStream muted={true} peer={selectedPeer} />
             )}
           </div>
           <div className="streamers-wrap">

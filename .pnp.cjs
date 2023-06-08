@@ -46,7 +46,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["swiper", "npm:9.3.2"],\
             ["typescript", "patch:typescript@npm%3A5.1.3#~builtin<compat/typescript>::version=5.1.3&hash=5da071"],\
             ["webpack", "virtual:ba87decfc09cec045b8217d34beaf58bb525f7745abbac8f5e78dd130ca709177bb3a0117995be3cdbe458a1347dcdcb5dba57961f7d2f92bfa8b3705403c3da#npm:5.85.1"],\
-            ["webpack-cli", "virtual:ba87decfc09cec045b8217d34beaf58bb525f7745abbac8f5e78dd130ca709177bb3a0117995be3cdbe458a1347dcdcb5dba57961f7d2f92bfa8b3705403c3da#npm:5.1.3"]\
+            ["webpack-cli", "virtual:ba87decfc09cec045b8217d34beaf58bb525f7745abbac8f5e78dd130ca709177bb3a0117995be3cdbe458a1347dcdcb5dba57961f7d2f92bfa8b3705403c3da#npm:5.1.3"],\
+            ["webpack-merge", "npm:5.9.0"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -3483,7 +3484,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["swiper", "npm:9.3.2"],\
             ["typescript", "patch:typescript@npm%3A5.1.3#~builtin<compat/typescript>::version=5.1.3&hash=5da071"],\
             ["webpack", "virtual:ba87decfc09cec045b8217d34beaf58bb525f7745abbac8f5e78dd130ca709177bb3a0117995be3cdbe458a1347dcdcb5dba57961f7d2f92bfa8b3705403c3da#npm:5.85.1"],\
-            ["webpack-cli", "virtual:ba87decfc09cec045b8217d34beaf58bb525f7745abbac8f5e78dd130ca709177bb3a0117995be3cdbe458a1347dcdcb5dba57961f7d2f92bfa8b3705403c3da#npm:5.1.3"]\
+            ["webpack-cli", "virtual:ba87decfc09cec045b8217d34beaf58bb525f7745abbac8f5e78dd130ca709177bb3a0117995be3cdbe458a1347dcdcb5dba57961f7d2f92bfa8b3705403c3da#npm:5.1.3"],\
+            ["webpack-merge", "npm:5.9.0"]\
           ],\
           "linkType": "SOFT"\
         }]\

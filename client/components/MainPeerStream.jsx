@@ -15,13 +15,18 @@ import VideocamIcon from "@mui/icons-material/Videocam";
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import { Peer } from '../socket';
 
+
 /**
  * @param {{
- * peer: Peer,
- * muted: boolean
- * }} props 
- */
-export default function PeerStream(props) {
+* peer: Peer,
+* muted: boolean
+* }} props 
+*/
+export default function MainPeerStream(props) {
+    if (!props.peer) {
+        return null;
+    }
+
     const peer = props.peer;
     const stream = peer.stream;
 
@@ -37,20 +42,6 @@ export default function PeerStream(props) {
         // videoRef.current.srcObject = stream;
         
     }, [stream.id]);
-
-    // const play = () => {
-    //     setPlaying(true);
-    //     const localStream = new MediaStream(stream.getVideoTracks());
-    //     videoRef.current.srcObject = localStream;
-    //     localStream.onremovetrack = () => setPlaying(false);
-    //     videoRef.current.play();
-    // }
-
-    // React.useEffect(() => {
-    //     if (!hasVideo) {
-    //         setPlaying(false);
-    //     }
-    // }, [hasVideo]);
 
     React.useLayoutEffect(() => {
         console.log(videoTrack);
@@ -71,35 +62,13 @@ export default function PeerStream(props) {
     }
 
     return (
-        // <div className="peer-stream-block">
-        //     <video autoPlay key={stream.id} className={`${!hasVideo ? "hidden" : ""}`} muted={props.muted} ref={videoRef} />
-
-        //     {!playing && videoRef.current && videoRef.current.paused && hasVideo &&
-        //     <div className="peer-stream-plug">
-        //         <Button onClick={play}>Показать трансляцию</Button>
-        //     </div>
-        //     }
-        // </div>
-
-
-
-        <div className="peer-stream-block">
+        <div className="main-peer-stream">
             <video autoPlay key={stream.id} className={`${!hasVideo ? "hidden" : ""}`} muted={props.muted} ref={videoRef} />
 
             <div className="peer-stream-top-menu">
-            <div className='peer-name'>
-                {peer.nick}
-            </div>
-            <div className='fullscreen-btn'>
-                <IconButton>
-                <FullscreenIcon color="info" />
-                </IconButton>
-            </div>
-            </div>
-
-            <div className="peer-stream-bottom-menu">
-            {audioTrack != null ? <MicIcon color="warning" /> : <MicOffIcon color="warning" />}
-            {videoTrack != null ? <VideocamIcon color="warning" /> : <VideocamOffIcon color="warning" />}
+                <div className='peer-name'>
+                    {peer.nick}
+                </div>
             </div>
 
             {!playing && videoRef.current && videoRef.current.paused && hasVideo &&
