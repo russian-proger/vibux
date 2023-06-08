@@ -15,6 +15,5 @@ engine = create_engine(f'postgresql://{username}:{password}@{host}:{port}/{name}
 
 from .conference import Conference
 from .user import User
-from .message import Message
 
 Base.metadata.create_all(engine)
