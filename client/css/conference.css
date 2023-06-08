@@ -24,6 +24,7 @@ body {
 
 .conversation {
   width: 100%;
+  min-width: 500px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -47,16 +48,24 @@ body {
   background-color: #242628;
 }
 
+.streamers-wrap {
+  overflow-x: auto;
+  overflow-y: hidden;
+  width: 100%;
+}
+
 .streamers {
-  overflow-x: scroll;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: row;
-  max-width: 100%;
   height: 20%;
+  width: fit-content;
   background-color: #242628;
+  padding-bottom: 10px;
+  min-width: 100%;
 }
+
 
 .streamer {
   margin: 0 10px;
@@ -70,11 +79,12 @@ body {
 
 .peer-stream-block {
   min-width: 250px;
-  height: 150px;
+  height: 140px;
   position: relative;
   border: 1px solid gray;
   border-radius: 10px;
   overflow: hidden;
+  margin: 0 10px;
 }
 
 .peer-stream-block video {
@@ -83,6 +93,48 @@ body {
   top: 0;
   width: 100%;
   height: 100%;
+}
+
+.peer-stream-plug {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.peer-stream-top-menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  color: white;
+  width: 100%;
+  height: 30px;
+  display: flex;
+  padding-left: 10px;
+  justify-content: space-between;
+  align-items: center;
+  background: #0003;
+}
+
+.peer-name {
+  max-width: 150px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.peer-stream-bottom-menu {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  box-sizing: border-box;
+  color: white;
+  width: 100%;
+  height: 30px;
+  display: flex;
+  padding-left: 10px;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .properites {

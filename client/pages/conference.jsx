@@ -11,6 +11,7 @@ import {
   Grid,
   Avatar,
   TextField,
+  IconButton,
 } from "@mui/material";
 
 import MicIcon from "@mui/icons-material/Mic";
@@ -124,8 +125,11 @@ export default function Conference(props) {
               <PeerStream muted={true} stream={mainStream} />
             )}
           </div>
-          <div className="streamers">
-            {streamMonitorsComponent}
+          <div className="streamers-wrap">
+            
+            <div className="streamers">
+              {streamMonitorsComponent}
+            </div>
           </div>
         </div>
         <div className="properites">

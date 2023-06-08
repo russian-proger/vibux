@@ -12,6 +12,6 @@ export default function PeerMonitor(props) {
     const videoRef = React.useRef(null);
 
     return (
-        <PeerStream stream={peer.stream} />
+        <PeerStream peer={peer} />
     );
 }
