@@ -38,6 +38,20 @@ export default function useMedia() {
         return getUserMedia({...mode, video: !mode.video});
     }, [waiting, stream]);
 
+    const shareDisplay = React.useCallback(() => {
+        navigator.mediaDevices.getDisplayMedia().then(displayStream => {
+            let newStream = new MediaStream();
+            for (let track of stream.getTracks()) {
+                newStream.addTrack(track);
+            }
+            for (let track of displayStream.getTracks()) {
+                newStream.addTrack(track);
+            }
+            setStream(newStream);
+            console.log(displayStream);
+        });
+    }, [waiting, stream]);
+
     React.useEffect(() => () => {
 
         // Clear previous stream
@@ -51,6 +65,7 @@ export default function useMedia() {
         mode,
         stream,
         toggleAudio,
-        toggleVideo
+        toggleVideo,
+        shareDisplay
     }
 }

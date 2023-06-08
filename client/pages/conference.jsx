@@ -22,6 +22,7 @@ import ChatIcon from "@mui/icons-material/Chat";
 import SendIcon from "@mui/icons-material/Send";
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
+import CastIcon from '@mui/icons-material/Cast';
 
 import { useParams } from "react-router-dom";
 
@@ -148,6 +149,9 @@ export default function Conference(props) {
               <VolumeUpIcon onClick={disableVoiceStream} />
             ) : (
               <VolumeOffIcon onClick={enableVoiceStream} />
+            )}
+            {!userMedia.mode.video && navigator.mediaDevices.getDisplayMedia && (
+              <CastIcon onClick={userMedia.shareDisplay} />
             )}
             <ChatIcon onClick={() => setVisibleChat(!visibleChat)} />
           </div>
