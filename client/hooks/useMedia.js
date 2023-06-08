@@ -44,7 +44,7 @@ export default function useMedia() {
             for (let track of stream.getTracks()) {
                 newStream.addTrack(track);
             }
-            for (let track of displayStream.getTracks()) {
+            for (let track of displayStream.getVideoTracks()) {
                 newStream.addTrack(track);
             }
             setStream(newStream);
