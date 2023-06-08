@@ -28,13 +28,29 @@ function Peer(sid, nick) {
     ]
   });
 
-  this.connection.ontrack = (ev) => {
-    this.stream.addTrack(ev.track);
-    console.log(ev);
-  }
+  this.connection.createDataChannel("connection");
+
+  this.connection.addEventListener('track', (ev) => {
+    const newStream = new MediaStream(this.stream);
+    if (ev.track.kind == 'audio') {
+      for (let track of newStream.getAudioTracks()) {
+        newStream.removeTrack(track);
+      }
+    } else if (ev.track.kind == 'video') {
+      for (let track of newStream.getAudioTracks()) {
+        newStream.removeTrack(track);
+      }
+    }
+    newStream.addTrack(ev.track);
+    this.stream = newStream;
+  });
 }
 
 function WebRTCManager(conference_id) {
+  this.onaddpeer = () => {}
+  this.onremovepeer = () => {}
+  this.onupdate = () => {}
+
   this.socket = io(options);
 
   this.stream = new MediaStream();
@@ -42,10 +58,10 @@ function WebRTCManager(conference_id) {
   /** @type {Map<string,Peer>} */
   this.peers = new Map();
 
-  const createPeer = (sid, nickname) => {
+  this.createPeer = (sid, nickname) => {
     if (!this.peers.has(sid)) {
       const peer = new Peer(sid, nickname);
-      this.peers[sid] = peer;
+      this.peers.set(sid, peer);
 
       // Adding tracks
       for (let track of this.stream.getTracks()) {
@@ -59,15 +75,22 @@ function WebRTCManager(conference_id) {
           candidate: ev.candidate
         })
       }
+
+      peer.connection.onnegotiationneeded = () => {
+        this.connectPeer({sid, nickname})
+      }
+
+      peer.connection.addEventListener('track', this.onupdate);
     }
 
-    return this.peers[sid];
+    const peer = this.peers.get(sid);
+    return peer;
   }
 
-  const connectPeer = async ({sid, nickname}) => {
+  this.connectPeer = async ({sid, nickname}) => {
     console.info(Actions.ADD_PEER, sid, nickname);
 
-    const peer = createPeer(sid, nickname)
+    const peer = this.createPeer(sid, nickname)
 
     const offer = await peer.connection.createOffer();
     await peer.connection.setLocalDescription(offer);
@@ -76,24 +99,22 @@ function WebRTCManager(conference_id) {
       destination: sid,
       sessionDescription: peer.connection.localDescription
     });
+
+    this.onupdate();
   }
 
 
   this.updateStream = (newStream) => {
     this.stream = newStream;
 
-    const peers = this.peers.values();
-    this.peers = new Map();
-
-    for (let peer of peers) {
-      peer.connection.close();
-    }
-
-    for (let peer of peers) {
-      connectPeer({
-        sid: peer.sid,
-        nickname: peer.nick
-      })
+    for (let peer of this.peers.values()) {
+      for (let sender of peer.connection.getSenders()) {
+        peer.connection.removeTrack(sender);
+      }
+      for (let track of this.stream.getTracks()) {
+        peer.connection.addTrack(track);
+      }
+      peer.connection.restartIce();
     }
   }
 
@@ -105,7 +126,10 @@ function WebRTCManager(conference_id) {
   });
 
   // Add new peer
-  this.socket.on(Actions.ADD_PEER, connectPeer);
+  this.socket.on(Actions.ADD_PEER, ({sid, nickname}) => {
+    this.createPeer(sid, nickname);
+    this.onupdate();
+  });
 
   // Remove peer
   this.socket.on(Actions.REMOVE_PEER, ({sid, nickname}) => {
@@ -115,6 +139,7 @@ function WebRTCManager(conference_id) {
     if (this.peers.has(sid)) {
       this.peers.get(sid).connection.close();
       this.peers.delete(sid);
+      this.onupdate();
     }
   })
 
@@ -124,9 +149,8 @@ function WebRTCManager(conference_id) {
     nickname,
     sessionDescription: remoteDescription
   }) => {
-
     if (remoteDescription.type == 'offer') {
-      const peer = createPeer(sid, nickname);
+      const peer = this.createPeer(sid, nickname);
 
       await peer.connection.setRemoteDescription(remoteDescription);
 
@@ -137,26 +161,25 @@ function WebRTCManager(conference_id) {
         destination: sid,
         sessionDescription: peer.connection.localDescription
       });
-
     } else {
-      const peer = this.peers[sid];
+      const peer = this.peers.get(sid);
       await peer.connection.setRemoteDescription(remoteDescription);
-
     }
+    this.onupdate();
   })
 
   // Receiving ICE
   this.socket.on(Actions.RELAY_ICE, async ({sid, nickname, candidate }) => {
       /** @type {Peer} */
-      const peer = this.peers[sid];
+      const peer = this.peers.get(sid);
       peer.connection.addIceCandidate(candidate);
   });
 
   this.destroy = () => {
-    this.socket.close();
     for (let peer of this.peers.values()) {
       peer.connection.close();
     }
+    this.socket.close();
   }
 }
 

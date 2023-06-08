@@ -41,7 +41,7 @@ def on_connect(sid, nickname):
 @socketio.on('disconnect')
 @auth
 def on_disconnect(sid, nickname):
-    room = sid_room[sid]
+    room = sid_room.get(sid, None)
     if room != None:
         leave_room(room)
         emit('remove-peer', {'sid': sid, 'nickname': nickname}, to=room)
@@ -68,6 +68,7 @@ def on_join(sid, nickname, data):
 def relay_sdp(sid, nickname, data):
     destination = data['destination']
     sessionDescription = data['sessionDescription']
+    print("SDP", sid, destination, data)
 
     # send sdp packet
     emit('relay-sdp', {'sid': sid, 'nickname': nickname, 'sessionDescription': sessionDescription}, to=destination)
@@ -78,6 +79,17 @@ def relay_sdp(sid, nickname, data):
 def relay_ice(sid, nickname, data):
     destination = data['destination']
     candidate = data['candidate']
+    print("ICE", sid, destination)
 
     # send ice packet
     emit('relay-ice', {'sid': sid, 'nickname': nickname, 'candidate': candidate}, to=destination)
+
+
+
+@socketio.on('remove-peer')
+@auth
+def remove_peer(sid, nickname, data):
+    destination = data['destination']
+
+    # send ice packet
+    emit('relay-ice', {'sid': sid, 'nickname': nickname}, to=destination)
