@@ -43,7 +43,7 @@ export default function Index(props) {
 
     const onLogout = async () => {
         const {conference_id} = await API.Conference.create();
-        navigate(`/logout`);
+        window.open("/logout");
     }
 
     return (
